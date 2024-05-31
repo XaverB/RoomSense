@@ -214,3 +214,111 @@ pgAdmin connection parameters when running the database with the provided `Docke
 This recommendation processing logic takes into account additional factors such as room occupancy status, outside temperature, and outside CO2 level to provide more targeted and context-aware recommendations for improving indoor air quality and comfort.
 
 Please note that the `GetRoomOccupancyStatus`, `GetOutsideTemperature`, and `GetOutsideCo2Level` methods are placeholders in this example, and you would need to implement the actual logic to retrieve the relevant data based on your specific requirements and available data sources.
+
+### Alarm logic
+
+Processes alarms based on the latest sensor readings.
+
+The `ProcessAlarmsAsync` method performs the following steps:
+
+1. Retrieves the latest readings for each sensor from the database using LINQ queries.
+   - Groups the readings by `SensorId` to get the latest reading for each sensor.
+   - Orders the readings within each group by `Timestamp` in descending order and selects the first reading (latest) for each sensor.
+   - Converts the result to a list using `ToListAsync()`.
+
+2. Iterates over each latest reading in the `latestReadings` list.
+
+3. For each reading:
+   - Retrieves the corresponding sensor from the database using `FindAsync()` with the `SensorId`.
+   - Retrieves the corresponding room from the database using `FindAsync()` with the `RoomId` associated with the sensor.
+
+4. Checks the sensor type and compares the reading value with the corresponding threshold:
+   - If the sensor type is "temperature" and the reading value exceeds the `TemperatureThreshold`:
+     - Checks if an alarm already exists for the same room and timestamp using `FirstOrDefaultAsync()`.
+     - If no existing alarm is found, creates a new `Alarm` object with the room ID, a message indicating high temperature, and the reading timestamp.
+     - Adds the new alarm to the `Alarms` DbSet using `AddAsync()`.
+   - If the sensor type is "co2" and the reading value exceeds the `Co2Threshold`:
+     - Checks if an alarm already exists for the same room and timestamp using `FirstOrDefaultAsync()`.
+     - If no existing alarm is found, creates a new `Alarm` object with the room ID, a message indicating high CO2 level, and the reading timestamp.
+     - Adds the new alarm to the `Alarms` DbSet using `AddAsync()`.
+
+5. After processing all the latest readings, saves the changes to the database using `SaveChangesAsync()`.
+
+This method ensures that alarms are generated only if the reading values exceed the specified thresholds and avoids creating duplicate alarms for the same room and timestamp.
+
+## Sensor Simulator
+
+The Sensor Simulator is a .NET application that generates simulated sensor data and publishes it to an MQTT broker. It allows you to simulate temperature, humidity, and CO2 sensor readings with realistic trends for testing and development purposes.
+
+### Configuration
+
+The simulator can be configured using environment variables or hardcoded values in the code. The following configuration options are available:
+
+- `MQTT_BROKER_URL`: The URL of the MQTT broker.
+- `MQTT_BROKER_PORT`: The port number of the MQTT broker.
+- `MQTT_TOPIC`: The MQTT topic to publish the sensor data to.
+- `MQTT_BROKER_USERNAME`: The username for authenticating with the MQTT broker.
+- `MQTT_BROKER_PASSWORD`: The password for authenticating with the MQTT broker.
+
+If the debugger is attached, the simulator will use hardcoded values for these configuration options. Otherwise, it will retrieve the values from the environment variables.
+
+### Sensor Data Generation
+
+The simulator generates sensor data for temperature, humidity, and CO2 with realistic trends. The initial values and trend factors can be adjusted in the code.
+
+The sensor data is generated in a loop with a specified interval (`publishInterval`) between each iteration. The generated data includes:
+
+- Temperature: Starts at 20°C and varies by a random value between -1 and 1, multiplied by the temperature trend factor.
+- Humidity: Starts at 50% and varies by a random value between -1 and 1, multiplied by the humidity trend factor.
+- CO2: Starts at 400 ppm and varies by a random value between -50 and 50, multiplied by the CO2 trend factor.
+
+The generated sensor values are rounded to two decimal places and ensure to stay within reasonable ranges (0-100 for temperature and humidity, 300-2000 for CO2).
+
+### MQTT Publishing
+
+The simulator publishes the generated sensor data to the specified MQTT broker using the provided configuration options.
+
+Each sensor type (temperature, humidity, CO2) is published to a separate MQTT topic:
+
+- Temperature: `{MQTT_TOPIC}/temperature`
+- Humidity: `{MQTT_TOPIC}/humidity`
+- CO2: `{MQTT_TOPIC}/co2`
+
+The sensor data is published as JSON payload in the following format:
+
+```json
+{
+  "SensorType": "Temperature",
+  "Value": 23.45,
+  "Timestamp": "2023-06-07T10:30:00Z"
+}
+```
+
+### Dockerfile
+
+A Dockerfile is provided to build the simulator and package it as a runnable container. The Dockerfile uses a multi-stage build process:
+
+1. The first stage uses the .NET SDK image to build the application.
+2. The second stage uses the .NET runtime image to create the final runnable container.
+
+To build the Docker image, navigate to the directory containing the Dockerfile and run the following command:
+
+```
+docker build -t sensor-simulator .
+```
+
+To run the container, use the following command:
+
+```
+docker run sensor-simulator
+```
+
+### Development Setup with Docker Compose
+
+In the development setup, two instances of the Sensor Simulator are started using Docker Compose. The Docker Compose file (`docker-compose.override.yml`) defines the services and their configurations.
+
+The two simulator instances are named `sensor-simulator-1` and `sensor-simulator-2`. They have different configuration options, such as MQTT topics and credentials, to simulate different rooms or sensors.
+
+Make sure to set the appropriate values for the environment variables in the Docker Compose file based on your MQTT broker and topic configuration.
+
+Note: Ensure that the required ports are available and not being used by other applications on your system. If necessary, modify the port mappings in the Docker Compose file to use different available ports.
