@@ -8,8 +8,8 @@ namespace SensorSimulator
 {
     public class SensorData
     {
-        public string SensorType { get; set; }
-        public double Value { get; set; }
-        public DateTime Timestamp { get; set; }
+        public string device { get; set; }
+        public string value { get; set; }
+        public DateTime timestamp { get; set; }
     }
 }

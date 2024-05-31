@@ -85,9 +85,9 @@ namespace SensorSimulator
 
                     var temperatureData = new SensorData
                     {
-                        SensorType = "Temperature",
-                        Value = Math.Round(temperature, 2),
-                        Timestamp = DateTime.UtcNow
+                        device = username,
+                        value = Math.Round(temperature, 2).ToString(),
+                        timestamp = DateTime.UtcNow
                     };
 
                     var temperatureMessage = new MqttApplicationMessageBuilder()
@@ -96,7 +96,7 @@ namespace SensorSimulator
                         .Build();
 
                     await _mqttClient.PublishAsync(temperatureMessage);
-                    Console.WriteLine($"Published temperature data: {temperatureData.Value}");
+                    Console.WriteLine($"Published temperature data: {temperatureData.value}");
 
                     // Generate humidity data with trend
                     humidity += _random.NextDouble() * 2 * humidityTrend - humidityTrend;
@@ -104,9 +104,9 @@ namespace SensorSimulator
 
                     var humidityData = new SensorData
                     {
-                        SensorType = "Humidity",
-                        Value = Math.Round(humidity, 2),
-                        Timestamp = DateTime.UtcNow
+                        device = username,
+                        value = Math.Round(humidity, 2).ToString(),
+                        timestamp = DateTime.UtcNow
                     };
 
                     var humidityMessage = new MqttApplicationMessageBuilder()
@@ -115,7 +115,7 @@ namespace SensorSimulator
                         .Build();
 
                     await _mqttClient.PublishAsync(humidityMessage);
-                    Console.WriteLine($"Published humidity data: {humidityData.Value}");
+                    Console.WriteLine($"Published humidity data: {humidityData.value}");
 
                     // Generate CO2 data with trend
                     co2 += _random.NextDouble() * 2 * co2Trend - co2Trend;
@@ -123,9 +123,9 @@ namespace SensorSimulator
 
                     var co2Data = new SensorData
                     {
-                        SensorType = "CO2",
-                        Value = Math.Round(co2, 2),
-                        Timestamp = DateTime.UtcNow
+                        device = username,
+                        value = Math.Round(co2, 2).ToString(),
+                        timestamp = DateTime.UtcNow
                     };
 
                     var co2Message = new MqttApplicationMessageBuilder()
@@ -134,7 +134,7 @@ namespace SensorSimulator
                         .Build();
 
                     await _mqttClient.PublishAsync(co2Message);
-                    Console.WriteLine($"Published CO2 data: {co2Data.Value}");
+                    Console.WriteLine($"Published CO2 data: {co2Data.value}");
 
                     await Task.Delay(TimeSpan.FromSeconds(interval));
                 }
