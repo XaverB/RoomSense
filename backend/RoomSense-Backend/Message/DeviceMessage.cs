@@ -20,8 +20,8 @@ namespace RoomSense_Backend.Message
             this.DeviceLocation = DeviceLocation;
         }
 
-        public  string DeviceId => Payload.DeviceId;
-        public  string Value => Payload.DeviceId;
-        public  string Timestamp => Payload.DeviceId;
+        public string DeviceId => Payload.Device;
+        public string Value => Payload.Device;
+        public string Timestamp => Payload.Device;
     }
 }

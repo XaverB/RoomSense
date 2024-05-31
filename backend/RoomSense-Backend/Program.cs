@@ -1,5 +1,6 @@
 
 using RoomSense_Backend.Entity;
+using RoomSense_Backend.Service;
 
 namespace RoomSense_Backend
 {
@@ -9,12 +10,13 @@ namespace RoomSense_Backend
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Services.AddHostedService<MqttService>();
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            
 
             var app = builder.Build();
 
