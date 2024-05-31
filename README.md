@@ -72,7 +72,48 @@ MQTT Topics:
 - Humidity: `room/humidity`
 - Temperature: `room/temperature`
 
+Here's a suggested format for a README file that includes the information you provided:
 
+## Message Formats
+
+The system uses the following MQTT topics to publish sensor data:
+
+**Humidity**
+```
+room/RAUM_NAME/humidity
+Payload:
+{
+  "device": "asdasd",
+  "value": 31.5
+}
+```
+
+**Temperature**
+```
+room/RAUM_NAME/temperature
+Payload:
+{
+  "device": "asdasd",
+  "value": 22.3
+}
+```
+
+**CO2**
+```
+room/RAUM_NAME/co2
+Payload:
+{
+  "device": "asdasd",
+  "value": 650
+}
+```
+
+Replace `RAUM_NAME` with the name of the specific room being monitored.
+
+The payload for each message includes the following fields:
+
+- `device`: The unique identifier of the sensor device
+- `value`: The measured value for the respective metric
 
 ## Database
 
