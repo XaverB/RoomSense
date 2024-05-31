@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RoomSense_Backend.Entity;
 using RoomSense_Backend.Message;
+using RoomSense_Backend.Seeder;
 using RoomSense_Backend.Service;
 
 namespace RoomSense_Backend
@@ -22,6 +23,9 @@ namespace RoomSense_Backend
             builder.Services.AddSingleton<MqttConnectionOptions>();
             builder.Services.AddSingleton<IHostedService, MqttHostedService>();
             builder.Services.AddSingleton<Func<IMessageProcessor>>(serviceProvider => () => serviceProvider.GetRequiredService<IMessageProcessor>());
+
+            builder.Services.AddHostedService<RecommendationProcessingService>();
+            builder.Services.AddHostedService<AlarmProcessingService>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -67,6 +71,7 @@ namespace RoomSense_Backend
                     context.SaveChanges();
                     Console.WriteLine("Database seeded");
                 }
+                SensorDataSeeder.SeedSensorData(context);
             }
         }
     }

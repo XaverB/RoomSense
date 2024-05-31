@@ -73,8 +73,6 @@ MQTT Topics:
 - Temperature: `room/RAUM_NAME/temperature`
 - CO2: Temperature: `room/RAUM_NAME/co2`
 
-Here's a suggested format for a README file that includes the information you provided:
-
 ## Message Formats
 
 The system uses the following MQTT topics to publish sensor data:
@@ -196,3 +194,23 @@ pgAdmin connection parameters when running the database with the provided `Docke
 
 
 
+## Web API
+
+### Recommendation logic
+
+1. The method considers additional factors such as room occupancy status, outside temperature, and outside CO2 level to provide more context-aware recommendations.
+2. The `GetRoomOccupancyStatus` method is introduced to determine whether a room is currently occupied or unoccupied. This information can be obtained from occupancy sensors or scheduling data. In this example, it assumes the room is always occupied for simplicity.
+3. The `GetOutsideTemperature` method is introduced to retrieve the current outside temperature. This information can be obtained from a weather API or other external sources. In this example, it assumes a constant outside temperature of 20°C for simplicity.
+4. The `GetOutsideCo2Level` method is introduced to retrieve the current outside CO2 level. This information can be obtained from an air quality API or other external sources. In this example, it assumes a constant outside CO2 level of 400 ppm for simplicity.
+5. The recommendation message is generated based on the following logic:
+   - If the temperature is high, the temperature trend exceeds the threshold, and the room is occupied:
+     - If the outside temperature is lower than the room temperature, it recommends opening windows to allow cooler outside air to enter the room.
+     - If the outside temperature is higher or equal to the room temperature, it recommends turning on air conditioning to cool down the room.
+   - If the CO2 level is high, the CO2 trend exceeds the threshold, and the room is occupied:
+     - If the outside CO2 level is lower than the room CO2 level, it recommends opening windows to allow fresh air to enter the room.
+     - If the outside CO2 level is higher or equal to the room CO2 level, it recommends turning on the ventilation system to circulate air and reduce CO2 levels.
+6. The generated recommendation message is added to the recommendation object along with the current temperature and CO2 level values.
+
+This recommendation processing logic takes into account additional factors such as room occupancy status, outside temperature, and outside CO2 level to provide more targeted and context-aware recommendations for improving indoor air quality and comfort.
+
+Please note that the `GetRoomOccupancyStatus`, `GetOutsideTemperature`, and `GetOutsideCo2Level` methods are placeholders in this example, and you would need to implement the actual logic to retrieve the relevant data based on your specific requirements and available data sources.
