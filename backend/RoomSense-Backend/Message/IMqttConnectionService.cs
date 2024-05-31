@@ -1,6 +1,6 @@
-﻿namespace RoomSense_Backend.Service
+﻿namespace RoomSense_Backend.Message
 {
-    public interface IMqttService
+    public interface IMqttConnectionService
     {
         Task StartAsync(CancellationToken cancellationToken);
         Task StopAsync(CancellationToken cancellationToken);

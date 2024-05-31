@@ -14,23 +14,23 @@ using RoomSense_Backend.Message;
 namespace RoomSense_Backend.Service
 {
 
-    public class MqttService : IHostedService
+    public class MqttHostedService : IHostedService
     {
-        private readonly IMqttService _mqttService;
+        private readonly IMqttConnectionService mqttConnectionService;
 
-        public MqttService(ILogger<IMqttService> logger, MqttConnectionOptions options, IMessageProcessor messageProcessor)
+        public MqttHostedService(IMqttConnectionService mqttConnectionService)
         {
-            _mqttService = new MqttConnectionService(logger, options, messageProcessor);
+            this.mqttConnectionService = mqttConnectionService ?? throw new ArgumentNullException(nameof(mqttConnectionService));
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            return _mqttService.StartAsync(cancellationToken);
+            return mqttConnectionService.StartAsync(cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            return _mqttService.StopAsync(cancellationToken);
+            return mqttConnectionService.StopAsync(cancellationToken);
         }
     }
 }

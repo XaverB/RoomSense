@@ -8,13 +8,13 @@ namespace RoomSense_Backend.Message
 {
     public class MessageProcessor : IMessageProcessor
     {
+        private readonly IServiceScopeFactory scopeFactory;
         private readonly ILogger<MessageProcessor> _logger;
-        private readonly MonitoringContext _dbContext;
 
-        public MessageProcessor(ILogger<MessageProcessor> logger, MonitoringContext dbContext)
+        public MessageProcessor(ILogger<MessageProcessor> logger, IServiceScopeFactory scopeFactory)
         {
             _logger = logger;
-            _dbContext = dbContext;
+            this.scopeFactory = scopeFactory;
         }
 
         public async Task HandleMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs eventArgs)
@@ -32,7 +32,14 @@ namespace RoomSense_Backend.Message
                     var roomName = segments[1];
                     var sensorType = segments[2];
 
-                    await ProcessMessage(roomName, sensorType, message);
+                    using (var scope = scopeFactory.CreateScope())
+                    {
+                        var db = scope.ServiceProvider.GetRequiredService<MonitoringContext>();
+
+                        await ProcessMessage(roomName, sensorType, message, db);
+                    }
+
+                    
                 }
                 else
                 {
@@ -45,7 +52,7 @@ namespace RoomSense_Backend.Message
             }
         }
 
-        private async Task ProcessMessage(string roomName, string sensorType, string message)
+        private async Task ProcessMessage(string roomName, string sensorType, string message, MonitoringContext db)
         {
             try
             {
@@ -53,21 +60,21 @@ namespace RoomSense_Backend.Message
                 _logger.LogInformation("{SensorType} in room {RoomName}: {Value} (Device: {Device}, Timestamp: {Timestamp})",
                     sensorType, roomName, payload.Value, payload.Device, payload.Timestamp);
 
-                var room = await _dbContext.Rooms.FirstOrDefaultAsync(r => r.Name == roomName);
+                var room = await db.Rooms.FirstOrDefaultAsync(r => r.Name == roomName);
                 if (room == null)
                 {
                     room = new Room { Name = roomName };
-                    _dbContext.Rooms.Add(room);
-                    await _dbContext.SaveChangesAsync();
+                    db.Rooms.Add(room);
+                    await db.SaveChangesAsync();
                     _logger.LogInformation("Created new room: {RoomName}", roomName);
                 }
 
-                var sensor = await _dbContext.Sensors.FirstOrDefaultAsync(s => s.RoomId == room.Id && s.Type == sensorType);
+                var sensor = await db.Sensors.FirstOrDefaultAsync(s => s.RoomId == room.Id && s.Type == sensorType);
                 if (sensor == null)
                 {
                     sensor = new Sensor { Type = sensorType, RoomId = room.Id };
-                    _dbContext.Sensors.Add(sensor);
-                    await _dbContext.SaveChangesAsync();
+                    db.Sensors.Add(sensor);
+                    await db.SaveChangesAsync();
                     _logger.LogInformation("Created new sensor: {SensorType} for room {RoomName}", sensorType, roomName);
                 }
 
@@ -77,8 +84,8 @@ namespace RoomSense_Backend.Message
                     Value = float.Parse(payload.Value),
                     Timestamp = DateTime.Parse(payload.Timestamp)
                 };
-                _dbContext.Readings.Add(reading);
-                await _dbContext.SaveChangesAsync();
+                db.Readings.Add(reading);
+                await db.SaveChangesAsync();
                 _logger.LogInformation("Stored reading for sensor {SensorId}", sensor.Id);
             }
             catch (JsonException ex)

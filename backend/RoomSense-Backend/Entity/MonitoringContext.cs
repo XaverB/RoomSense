@@ -15,11 +15,19 @@ namespace RoomSense_Backend.Entity
         public DbSet<Recommendation> Recommendations { get; set; }
         public DbSet<Alarm> Alarms { get; set; }
 
+        public MonitoringContext(DbContextOptions<MonitoringContext> options)
+            : base(options)
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string connectionString = Environment.GetEnvironmentVariable("ConnectionStringRoomSenseDB") 
-                ?? throw new ArgumentNullException("\"ConnectionStringRoomSenseDB\" not provided in environment.");
-            optionsBuilder.UseNpgsql(connectionString);
+            if (!optionsBuilder.IsConfigured)
+            {
+                string connectionString = Environment.GetEnvironmentVariable("ConnectionStringRoomSenseDB")
+                    ?? throw new ArgumentNullException("\"ConnectionStringRoomSenseDB\" not provided in environment.");
+                optionsBuilder.UseNpgsql(connectionString);
+            }
         }
 
         public void EnsureCreated()

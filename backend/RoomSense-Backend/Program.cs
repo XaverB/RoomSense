@@ -1,5 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
 using RoomSense_Backend.Entity;
+using RoomSense_Backend.Message;
 using RoomSense_Backend.Service;
 
 namespace RoomSense_Backend
@@ -10,7 +12,16 @@ namespace RoomSense_Backend
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddHostedService<MqttService>();
+            builder.Services.AddDbContext<MonitoringContext>(options =>
+            {
+                options.UseNpgsql(Environment.GetEnvironmentVariable("ConnectionStringRoomSenseDB") ?? throw new ArgumentNullException("ConnectionStringRoomSenseDB not defined"));
+            });
+
+            builder.Services.AddSingleton<IMqttConnectionService, MqttConnectionService>();
+            builder.Services.AddSingleton<IMessageProcessor, MessageProcessor>();
+            builder.Services.AddSingleton<MqttConnectionOptions>();
+            builder.Services.AddSingleton<IHostedService, MqttHostedService>();
+            builder.Services.AddSingleton<Func<IMessageProcessor>>(serviceProvider => () => serviceProvider.GetRequiredService<IMessageProcessor>());
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -34,16 +45,18 @@ namespace RoomSense_Backend
 
             app.MapControllers();
 
-            EnsureDatabase();
+            // Pass the IServiceProvider to the EnsureDatabase method
+            EnsureDatabase(app.Services);
 
             app.Run();
         }
 
-        private static void EnsureDatabase()
+        private static void EnsureDatabase(IServiceProvider serviceProvider)
         {
-            using (var context = new MonitoringContext())
+            using (var scope = serviceProvider.CreateScope())
             {
-                context.EnsureCreated();
+                var context = scope.ServiceProvider.GetRequiredService<MonitoringContext>();
+                context.Database.EnsureCreated();
                 Console.WriteLine("Database created");
 
                 // Seed initial data

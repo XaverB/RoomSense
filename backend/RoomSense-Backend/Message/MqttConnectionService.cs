@@ -1,17 +1,16 @@
 ﻿using MQTTnet.Client;
 using MQTTnet;
-using RoomSense_Backend.Service;
 
 namespace RoomSense_Backend.Message
 {
-    public class MqttConnectionService : IMqttService
+    public class MqttConnectionService : IMqttConnectionService
     {
-        private readonly ILogger<IMqttService> _logger;
+        private readonly ILogger<IMqttConnectionService> _logger;
         private IMqttClient? _mqttClient;
         private readonly MqttConnectionOptions _options;
         private readonly IMessageProcessor _messageProcessor;
 
-        public MqttConnectionService(ILogger<IMqttService> logger, MqttConnectionOptions options, IMessageProcessor messageProcessor)
+        public MqttConnectionService(ILogger<IMqttConnectionService> logger, MqttConnectionOptions options, IMessageProcessor messageProcessor)
         {
             _logger = logger;
             _options = options;

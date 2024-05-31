@@ -6,11 +6,16 @@ services:
     build:
       context: RoomSense-Backend
       dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+      - "1883:1883"
+      - "8883:8883"
+      - "8884:8884"
     depends_on:
       - roomsense-database
     environment:
       - ConnectionStringRoomSenseDB=Server=roomsense-database;Port=5432;Database=roomsense;User Id=roomsense-service;Password=iot;
-      - MQTT_BROKER_URL=mqtt://c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud:8883
+      - MQTT_BROKER_URL=c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud
       - MQTT_BROKER_PORT=8883
       - MQTT_BROKER_USERNAME=service
       - MQTT_BROKER_PASSWORD=Service1

@@ -23,6 +23,13 @@ namespace RoomSense_Backend.Message
             return new MqttClientOptionsBuilder()
                 .WithTcpServer(_brokerUrl, _brokerPort)
                 .WithCredentials(_brokerUsername, _brokerPassword)
+                .WithTls(new MqttClientOptionsBuilderTlsParameters
+                {
+                    UseTls = true,
+                    AllowUntrustedCertificates = true, // Set this to false in production and use a trusted certificate
+                    IgnoreCertificateChainErrors = true, // Set this to false in production
+                    IgnoreCertificateRevocationErrors = true // Set this to false in production
+                })
                 .Build();
         }
     }
