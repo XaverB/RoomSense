@@ -72,3 +72,77 @@ MQTT Topics:
 - Humidity: `room/humidity`
 - Temperature: `room/temperature`
 
+
+
+## Database
+
+```mermaid
+erDiagram
+    Room {
+        int id PK
+        string name
+        string location
+    }
+
+    Sensor {
+        int id PK
+        string type
+        int room_id FK
+    }
+
+    Reading {
+        int id PK
+        int sensor_id FK
+        float value
+        timestamp timestamp
+    }
+
+    User {
+        int id PK
+        string username
+        string email
+        string password
+    }
+
+    Recommendation {
+        int id PK
+        int room_id FK
+        string message
+        timestamp timestamp
+    }
+
+    Alarm {
+        int id PK
+        int room_id FK
+        string message
+        timestamp timestamp
+    }
+
+    Room ||--o{ Sensor : has
+    Sensor ||--o{ Reading : generates
+    Room ||--o{ Recommendation : receives
+    Room ||--o{ Alarm : triggers
+    User }o--o{ Room : monitors
+```
+
+Entities:
+
+1. Room: Represents a physical room being monitored. It has attributes like id, name, and location.
+2. Sensor: Represents a sensor installed in a room. It has attributes like id, type (temperature or CO2), and a foreign key referencing the associated room.
+3. Reading: Represents a sensor reading. It has attributes like id, a foreign key referencing the sensor, the measured value, and a timestamp.
+4. User: Represents a user of the web application. It has attributes like id, username, email, and password.
+5. Recommendation: Represents a ventilation recommendation for a room. It has attributes like id, a foreign key referencing the room, the recommendation message, and a timestamp.
+6. Alarm: Represents an alarm triggered when critical air quality values are reached. It has attributes like id, a foreign key referencing the room, the alarm message, and a timestamp.
+
+Relationships:
+
+- A Room can have multiple Sensors (one-to-many).
+- A Sensor generates multiple Readings (one-to-many).
+- A Room receives multiple Recommendations (one-to-many).
+- A Room triggers multiple Alarms (one-to-many).
+- A User can monitor multiple Rooms, and a Room can be monitored by multiple Users (many-to-many).
+
+
+
+
+
