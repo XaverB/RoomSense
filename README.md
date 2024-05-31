@@ -35,3 +35,18 @@ graph LR
 
 By using the Arduino Uno R3 as the microcontroller board and integrating the DHT11 temperature/humidity sensor and MQ-135 gas sensor, this IOT device can effectively monitor environmental conditions and air quality.
 
+Here's an improved version of the MQTT Broker information:
+
+## MQTT Broker
+[HiveMQ Cloud](https://console.hivemq.cloud/)
+Cluster URL: `c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud`
+TLS MQTT Port: `8883`
+WebSocket Port: `8884`
+
+TLS MQTT URL: `c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud:8883`
+TLS WebSocket URL: `c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud:8884/mqtt`
+
+MQTT Topics:
+- Humidity: `room/humidity`
+- Temperature: `room/temperature`
+
