@@ -1,8 +1,8 @@
 ﻿using MQTTnet.Client;
 using MQTTnet;
-using RoomSense_Backend.Message;
+using RoomSense_Backend.Service;
 
-namespace RoomSense_Backend.Service
+namespace RoomSense_Backend.Message
 {
     public class MqttConnectionService : IMqttService
     {

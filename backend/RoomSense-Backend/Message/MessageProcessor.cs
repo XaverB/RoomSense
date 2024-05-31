@@ -6,6 +6,10 @@ namespace RoomSense_Backend.Message
 {
     public class MessageProcessor : IMessageProcessor
     {
+        private const string TOPIC_HUMIDITY = "humidity";
+        private const string TOPIC_TEMPERATURE = "temperature";
+        private const string TOPIC_CO2 = "co2";
+
         private readonly ILogger<MessageProcessor> _logger;
 
         public MessageProcessor(ILogger<MessageProcessor> logger)
@@ -28,13 +32,13 @@ namespace RoomSense_Backend.Message
 
                 switch (sensorType)
                 {
-                    case "humidity":
+                    case TOPIC_HUMIDITY:
                         await ProcessHumidityMessage(roomName, message);
                         break;
-                    case "temperature":
+                    case TOPIC_TEMPERATURE:
                         await ProcessTemperatureMessage(roomName, message);
                         break;
-                    case "co2":
+                    case TOPIC_CO2:
                         await ProcessCo2Message(roomName, message);
                         break;
                 }
