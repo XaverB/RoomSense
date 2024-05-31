@@ -69,8 +69,9 @@ TLS MQTT URL: `c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud:8883`
 TLS WebSocket URL: `c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud:8884/mqtt`
 
 MQTT Topics:
-- Humidity: `room/humidity`
-- Temperature: `room/temperature`
+- Humidity: `room/RAUM_NAME/humidity`
+- Temperature: `room/RAUM_NAME/temperature`
+- CO2: Temperature: `room/RAUM_NAME/co2`
 
 Here's a suggested format for a README file that includes the information you provided:
 
@@ -99,6 +100,7 @@ Payload:
 ```
 
 **CO2**
+
 ```
 room/RAUM_NAME/co2
 Payload:
