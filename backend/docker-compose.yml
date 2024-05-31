@@ -38,6 +38,48 @@ services:
       - "5432:5432"
     networks:
       - roomsense-network
+ 
+  sensor-simulator-1:
+    image: ${DOCKER_REGISTRY-}sensorsimulator
+    build:
+      context: SensorSimulator
+      dockerfile: Dockerfile
+    depends_on:
+      - roomsense-backend
+    ports:
+      - "8080:80"
+      - "1883:1883"
+      - "8883:8883"
+      - "8884:8884"
+    environment:
+      - MQTT_BROKER_URL=c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud
+      - MQTT_BROKER_PORT=8883
+      - MQTT_BROKER_USERNAME=sensor-simulator-1
+      - MQTT_BROKER_PASSWORD=SensorSim123
+      - MQTT_TOPIC=room/simulator1
+    networks:
+      - roomsense-network 
+- 
+  sensor-simulator-2:
+    image: ${DOCKER_REGISTRY-}sensorsimulator
+    build:
+      context: SensorSimulator
+      dockerfile: Dockerfile
+    depends_on:
+      - roomsense-backend
+    ports:
+      - "8080:80"
+      - "1883:1883"
+      - "8883:8883"
+      - "8884:8884"
+    environment:
+      - MQTT_BROKER_URL=c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud
+      - MQTT_BROKER_USERNAME=sensor-simulator-2
+      - MQTT_BROKER_PASSWORD=SensorSim123
+      - MQTT_TOPIC=room/simulator2
+      - MQTT_BROKER_PORT=8883
+    networks:
+      - roomsense-network 
 
 networks:
   roomsense-network:
