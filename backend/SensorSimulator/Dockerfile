@@ -21,10 +21,10 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-ENV MQTT_BROKER_URL=c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud
-ENV MQTT_BROKER_PORT=8883
-ENV MQTT_TOPIC=room/simulator2
-ENV MQTT_BROKER_USERNAME=sensor-simulator-2
-ENV MQTT_BROKER_PASSWORD=SensorSim123
+# ENV MQTT_BROKER_URL=c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud
+# ENV MQTT_BROKER_PORT=8883
+# ENV MQTT_TOPIC=room/simulator2
+# ENV MQTT_BROKER_USERNAME=sensor-simulator-2
+# ENV MQTT_BROKER_PASSWORD=SensorSim123
 
 ENTRYPOINT ["dotnet", "SensorSimulator.dll"]
