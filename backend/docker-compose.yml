@@ -10,6 +10,10 @@ services:
       - roomsense-database
     environment:
       - ConnectionStringRoomSenseDB=Server=roomsense-database;Port=5432;Database=roomsense;User Id=roomsense-service;Password=iot;
+      - MQTT_BROKER_URL=mqtt://c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud:8883
+      - MQTT_BROKER_PORT=8883
+      - MQTT_BROKER_USERNAME=service
+      - MQTT_BROKER_PASSWORD=Service1
     networks:
       - roomsense-network
 
