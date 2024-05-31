@@ -32,8 +32,13 @@ namespace RoomSense_Backend
 
             app.MapControllers();
 
-            app.Run();
+            EnsureDatabase();
 
+            app.Run();
+        }
+
+        private static void EnsureDatabase()
+        {
             using (var context = new MonitoringContext())
             {
                 context.EnsureCreated();

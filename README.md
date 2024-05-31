@@ -142,7 +142,11 @@ Relationships:
 - A Room triggers multiple Alarms (one-to-many).
 - A User can monitor multiple Rooms, and a Room can be monitored by multiple Users (many-to-many).
 
+### pgAdmin connection
 
+pgAdmin connection parameters when running the database with the provided `Dockerfile` _(password = "iot")_:
+
+![image-20240531115611823](./assets/image-20240531115611823.png)
 
 
 

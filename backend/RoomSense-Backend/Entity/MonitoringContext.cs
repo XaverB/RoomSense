@@ -17,7 +17,9 @@ namespace RoomSense_Backend.Entity
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("ConnectionStringRoomSenseDB");
+            string connectionString = Environment.GetEnvironmentVariable("ConnectionStringRoomSenseDB") 
+                ?? throw new ArgumentNullException("\"ConnectionStringRoomSenseDB\" not provided in environment.");
+            optionsBuilder.UseNpgsql(connectionString);
         }
 
         public void EnsureCreated()
