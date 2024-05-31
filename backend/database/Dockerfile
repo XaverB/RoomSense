@@ -2,9 +2,9 @@
 FROM postgres:latest
 
 # Set environment variables for the database
-ENV POSTGRES_USER myuser
-ENV POSTGRES_PASSWORD mypassword
-ENV POSTGRES_DB mydb
+ENV POSTGRES_USER roomsense-service
+ENV POSTGRES_PASSWORD iot
+ENV POSTGRES_DB roomsense
 
 # Copy any initialization scripts (if needed)
 # COPY init.sql /docker-entrypoint-initdb.d/

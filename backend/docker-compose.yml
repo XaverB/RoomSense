@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  roomsense-backend:
+    image: ${DOCKER_REGISTRY-}roomsensebackend
+    build:
+      context: RoomSense-Backend
+      dockerfile: Dockerfile
+    depends_on:
+      - roomsense-database
+    environment:
+      - ConnectionStringRoomSenseDB=Server=roomsense-database;Port=5432;Database=roomsense;User Id=roomsense-service;Password=iot;
+    networks:
+      - roomsense-network
+
+  roomsense-database:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USER=roomsense-service
+      - POSTGRES_PASSWORD=iot
+      - POSTGRES_DB=roomsense
+    ports:
+      - "5432:5432"
+    networks:
+      - roomsense-network
+
+networks:
+  roomsense-network:
+    driver: bridge
