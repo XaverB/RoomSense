@@ -1,0 +1,1 @@
+docker run -d --name roomsense-db-container -p 5432:5432 roomsense-db
