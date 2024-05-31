@@ -85,7 +85,8 @@ room/RAUM_NAME/humidity
 Payload:
 {
   "device": "asdasd",
-  "value": 31.5
+  "value": 31.5,
+  "timestamp": "YYYY-MM-DD hh:mm:ss"
 }
 ```
 
@@ -95,7 +96,8 @@ room/RAUM_NAME/temperature
 Payload:
 {
   "device": "asdasd",
-  "value": 22.3
+  "value": 22.3,
+  "timestamp": "YYYY-MM-DD hh:mm:ss"
 }
 ```
 
@@ -106,7 +108,8 @@ room/RAUM_NAME/co2
 Payload:
 {
   "device": "asdasd",
-  "value": 650
+  "value": 650,
+  "timestamp": "YYYY-MM-DD hh:mm:ss"
 }
 ```
 
