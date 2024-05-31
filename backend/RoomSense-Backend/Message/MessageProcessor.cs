@@ -56,14 +56,14 @@ namespace RoomSense_Backend.Message
         {
             try
             {
-                var payload = JsonSerializer.Deserialize<Payload>(message);
+                var payload = JsonSerializer.Deserialize<Payload>(message, new JsonSerializerOptions() { PropertyNameCaseInsensitive = false });
                 _logger.LogInformation("{SensorType} in room {RoomName}: {Value} (Device: {Device}, Timestamp: {Timestamp})",
                     sensorType, roomName, payload.Value, payload.Device, payload.Timestamp);
 
                 var room = await db.Rooms.FirstOrDefaultAsync(r => r.Name == roomName);
                 if (room == null)
                 {
-                    room = new Room { Name = roomName };
+                    room = new Room { Name = roomName, Location = roomName };
                     db.Rooms.Add(room);
                     await db.SaveChangesAsync();
                     _logger.LogInformation("Created new room: {RoomName}", roomName);
@@ -82,7 +82,7 @@ namespace RoomSense_Backend.Message
                 {
                     SensorId = sensor.Id,
                     Value = float.Parse(payload.Value),
-                    Timestamp = DateTime.Parse(payload.Timestamp)
+                    Timestamp = DateTime.SpecifyKind(DateTime.Parse(payload.Timestamp), DateTimeKind.Utc)
                 };
                 db.Readings.Add(reading);
                 await db.SaveChangesAsync();

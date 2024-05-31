@@ -26,13 +26,24 @@ namespace RoomSense_Backend.Message
 
             await _mqttClient.ConnectAsync(_options.BuildOptions(), cancellationToken);
 
-            var topicFilter = new MqttTopicFilterBuilder()
+            // + is a single level wildcard
+            var topicFilterHumidity = new MqttTopicFilterBuilder()
                 .WithTopic("room/+/humidity")
-                .WithTopic("room/+/temperature")
+                .Build();
+
+            var topicFilterCo2 = new MqttTopicFilterBuilder()
                 .WithTopic("room/+/co2")
                 .Build();
 
-            await _mqttClient.SubscribeAsync(topicFilter, cancellationToken);
+            var topicFilterTemperature = new MqttTopicFilterBuilder()
+                .WithTopic("room/+/temperature")
+                .Build();
+
+            await Task.WhenAll(
+                _mqttClient.SubscribeAsync(topicFilterHumidity, cancellationToken),
+                _mqttClient.SubscribeAsync(topicFilterCo2, cancellationToken),
+                _mqttClient.SubscribeAsync(topicFilterTemperature, cancellationToken)
+                );
 
             _logger.LogInformation("MQTT client connected and subscribed to topics.");
         }
