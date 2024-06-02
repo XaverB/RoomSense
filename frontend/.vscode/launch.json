@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Chrome against localhost",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3001",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "npm: develop",  // Make sure this matches the label in tasks.json
+      "userDataDir": "${workspaceFolder}/.vscode/chrome",
+      "sourceMaps": true,
+      "breakpoints": "all"
+    }
+  ]
+}

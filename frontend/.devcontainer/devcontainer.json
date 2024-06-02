@@ -1,0 +1,21 @@
+{
+  "name": "SmartSense",
+  "build": {
+    "context": "..",
+    "dockerfile": "../Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+      }
+    }
+  },
+  "appPort": ["3001:3000"], // map inside port 3000 to outside port 3001
+  "postCreateCommand": "npm install",
+  "remoteUser": "node"
+}

@@ -31,7 +31,19 @@ namespace RoomSense_Backend
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    bld =>
+                    {
+                        bld.WithOrigins(builder.Configuration["Urls:frontend"]!)
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials();
+                    });
+            });
+
+
 
             var app = builder.Build();
 
@@ -46,7 +58,7 @@ namespace RoomSense_Backend
 
             app.UseAuthorization();
 
-
+            app.UseCors();
             app.MapControllers();
 
             // Pass the IServiceProvider to the EnsureDatabase method

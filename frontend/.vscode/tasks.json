@@ -1,0 +1,36 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+      {
+          "label": "npm: develop",
+          "type": "npm",
+          "script": "start",
+          "isBackground": true,
+          "problemMatcher": {
+              "owner": "javascript",
+              "pattern": {
+                  "regexp": "^(.*?)$",
+                  "file": 1,
+                  "location": 2,
+                  "message": 3
+              },
+              "background": {
+                  "activeOnStart": true,
+                  "beginsPattern": "^Starting the development server\\.\\.\\.$", // Regex to match the start of the server
+                  "endsPattern": "^webpack compiled$" // Regex to match when the server is ready
+              }
+          },
+          "group": {
+              "kind": "build",
+              "isDefault": true
+          },
+          "presentation": {
+              "reveal": "always",
+              "focus": false,
+              "panel": "shared",
+              "showReuseMessage": false,
+              "clear": false
+          }
+      }
+  ]
+}
