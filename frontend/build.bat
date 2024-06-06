@@ -1,0 +1,1 @@
+echo Call build from ./deploy/ingress/build.bat
