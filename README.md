@@ -7,12 +7,13 @@ Another feature is an alarm system that is activated when critical air quality v
 
 ```mermaid
 graph LR
-  device --MQTT--> backend
-  backend <---> database
-  frontend <---> backend
-  alexa ----> backend
-  user <---> alexa
-  user <---> frontend
+  A[Device] --MQTT--> B[Backend]
+  B <--> C[Database]
+  D[Frontend] <--> B
+  E[Alexa] --> F[AWS Lambda]
+  F --> B
+  G[User] <--> E
+  G <--> D
 ```
 
 ## IOT Device Specifications
@@ -322,3 +323,15 @@ The two simulator instances are named `sensor-simulator-1` and `sensor-simulator
 Make sure to set the appropriate values for the environment variables in the Docker Compose file based on your MQTT broker and topic configuration.
 
 Note: Ensure that the required ports are available and not being used by other applications on your system. If necessary, modify the port mappings in the Docker Compose file to use different available ports.
+
+
+
+## Alexa Skill - room sense
+
+- Install `ASK CLI` by running `npm install -g ask-cli` as administrator.
+- Create account at https://developer.amazon.com/alexa/console
+- Create Skill
+  - define interaction model
+  - create tasks
+  - 
+

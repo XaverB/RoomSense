@@ -5,6 +5,13 @@ USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
+EXPOSE 80
+EXPOSE 443 
+
+# Install SSL/TLS certificates
+#RUN apt-get update && \
+#    apt-get install -y ca-certificates && \
+#    update-ca-certificates
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -22,4 +29,9 @@ RUN dotnet publish "./RoomSense-Backend.csproj" -c $BUILD_CONFIGURATION -o /app/
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Copy SSL/TLS certificate files
+##COPY roomsense.crt /app/roomsense.crt
+##COPY roomsense.key /app/roomsense.key
+
 ENTRYPOINT ["dotnet", "RoomSense-Backend.dll"]
