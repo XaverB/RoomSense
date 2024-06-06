@@ -1,17 +1,18 @@
 import React from 'react';
 import logo from './logo.svg';
 import SmartSense from './components/SmartSense';
+import RoomSense from './components/RoomSense';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="bg-blue-500 text-white p-4">
-        SmartSense
-      </header>
-
-      <SmartSense />
-    </div>
+    <Router>
+    <Routes>
+      <Route path="/" element={<SmartSense />} />
+      <Route path="/room/:id" element={<RoomSense />} />
+    </Routes>
+  </Router>
   );
 }
 
