@@ -36,10 +36,11 @@ namespace RoomSense_Backend
                 options.AddDefaultPolicy(
                     bld =>
                     {
-                        bld.WithOrigins(builder.Configuration["Urls:frontend"]!)
+                        bld.AllowAnyOrigin()
                             .AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .AllowCredentials();
+                            .AllowAnyHeader();
+
+
                     });
             });
 
@@ -48,11 +49,10 @@ namespace RoomSense_Backend
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
 
             app.UseHttpsRedirection();
 

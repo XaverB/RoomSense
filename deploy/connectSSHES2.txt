@@ -1,0 +1,1 @@
+ssh -i "AmazonES2.pem" ec2-user@ec2-13-48-117-248.eu-north-1.compute.amazonaws.com

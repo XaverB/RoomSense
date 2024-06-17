@@ -1,0 +1,58 @@
+version: '3.4'
+services:
+  roomsense-backend:
+    image: xaverb/roomsense-backend:v5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    expose:
+      - "80"
+    depends_on:
+      - roomsense-database
+    environment:
+      - ConnectionStringRoomSenseDB=Server=roomsense-database;Port=5432;Database=roomsense;User Id=roomsense-service;Password=iot;
+      - MQTT_BROKER_URL=c93e99eaf93b4f81aa4db3ba6fee2780.s1.eu.hivemq.cloud
+      - MQTT_BROKER_PORT=8883
+      - MQTT_BROKER_USERNAME=service
+      - MQTT_BROKER_PASSWORD=Service1
+      - TEMPERATURE_THRESHOLD=30
+      - CO2_THRESHOLD=1000
+      - ALARM_PROCESSING_SERVICE_DELAY_MINUTES=1
+      - RECOMMENDATION_PROCESSING_SERVICE_DELAY_MINUTES=1 
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=docker
+    networks:
+      - roomsense-network
+  
+  roomsense-database:
+    image: xaverb/roomsense-db:v1
+    environment:
+      - POSTGRES_USER=roomsense-service
+      - POSTGRES_PASSWORD=iot
+      - POSTGRES_DB=roomsense
+    networks:
+      - roomsense-network
+    volumes:
+      - ./roomsense-db-data:/var/lib/postgresql/data
+
+  roomsense-ingress:
+    image: xaverb/roomsense-ingress:v1
+    ports:
+      - "80:80"
+      - "443:443"
+      - "1884:1883"
+      - "8885:8883"
+      - "8886:8884"
+    volumes:
+      - ./xaverb.dev.cer:/etc/nginx/certs/xaverb.dev.cer
+      - ./xaverb.dev.key:/etc/nginx/certs/xaverb.dev.key
+    depends_on:
+      - roomsense-backend
+    networks:
+      - roomsense-network
+
+networks:
+  roomsense-network:
+    driver: bridge

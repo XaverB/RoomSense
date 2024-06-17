@@ -1,5 +1,6 @@
 {
   "name": "smartsense-app",
+  "homepage": "/cockpit",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -15,6 +16,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
+    "recharts": "^2.12.7",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
