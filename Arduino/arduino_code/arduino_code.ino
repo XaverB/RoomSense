@@ -3,14 +3,15 @@
 #include "WiFiSSLClient.h"
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
+#include "RTC.h"
 
 DHT11 dht11(7);
-int smokeA0 = A5;
+int smokeA0 = A0;
 int led = 12;
 int threshold = 300;
 
-const char* ssid = "xxx";
-const char* password = "xxx";
+const char* ssid = "___";
+const char* password = "___";
 
 const char* mqtt_user = "device";
 const char* mqtt_pw = "Device123";
@@ -66,6 +67,10 @@ void setup() {
   setup_wifi();
   client.setCACert(server_cert);
 
+  RTC.begin();
+  RTCTime startTime(23, Month::JUNE, 2024, 15, 9, 00, DayOfWeek::SUNDAY, SaveLight::SAVING_TIME_ACTIVE);
+  RTC.setTime(startTime);
+
   mqttClient.setServer(mqttServerAddress, mqttServerPort);
   mqttClient.setCallback(callback);
 }
@@ -116,7 +121,22 @@ void pub(char* topic, char* value, char* device){
     StaticJsonDocument<200> doc;
     doc["device"] = device;
     doc["value"] = value;
-    doc["timestamp"] = "";
+
+
+    RTCTime currentTime;
+    RTC.getTime(currentTime);
+    int currentYear = currentTime.getYear();
+    int currentMonth = Month2int(currentTime.getMonth());
+    int currentDay = currentTime.getDayOfMonth();
+    int currentHour = currentTime.getHour();
+    int currentMinute = currentTime.getMinutes();
+    int currentSecond = currentTime.getSeconds();
+
+    // Format the date and time as an ISO 8601 string
+    char isoDateTime[21];
+    snprintf(isoDateTime, sizeof(isoDateTime), "%02d-%02d-%02dT%02d:%02d:%02dZ", currentYear, currentMonth, currentDay, currentHour, currentMinute, currentSecond);
+    Serial.println(isoDateTime);
+    doc["timestamp"] = isoDateTime;
 
     // Serialize JSON to string
     char jsonBuffer[512];
