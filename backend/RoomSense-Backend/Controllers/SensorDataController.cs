@@ -67,7 +67,7 @@ namespace RoomSense_Backend.Controllers
                 return NotFound();
             }
 
-            return Ok(sensorData);
+            return Ok(sensorData.OrderBy(x => x.Timestamp).ToList());
         }
 
         private bool IsValidSensorType(string type)

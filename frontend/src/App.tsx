@@ -28,7 +28,9 @@ interface Recommendation {
 const App: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
-  const [sensorData, setSensorData] = useState<SensorReading[]>([]);
+  const [sensorDataTemperature, setSensorDataTemperature] = useState<SensorReading[]>([]);
+  const [sensorDataHumidity, setSensorDataHumidity] = useState<SensorReading[]>([]);
+  const [sensorDataCo2, setSensorDataCo2] = useState<SensorReading[]>([]);
   const [alarms, setAlarms] = useState<Alarm[]>([]);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
 
@@ -57,9 +59,15 @@ const App: React.FC = () => {
 
   const handleRoomChange = (roomId: number) => {
     setSelectedRoom(roomId);
-    fetch(`/api/SensorData/room/${roomId}`)
+    fetch(`/api/SensorData/room/${roomId}?type=temperature&page=1&pageSize=100`)
       .then(response => response.json())
-      .then(data => setSensorData(data));
+      .then(data => setSensorDataTemperature(data));
+    fetch(`/api/SensorData/room/${roomId}?type=humidity&page=1&pageSize=100`)
+      .then(response => response.json())
+      .then(data => setSensorDataHumidity(data));
+    fetch(`/api/SensorData/room/${roomId}?type=co2&page=1&pageSize=100`)
+      .then(response => response.json())
+      .then(data => setSensorDataCo2(data));
   };
 
   return (
@@ -82,16 +90,46 @@ const App: React.FC = () => {
       </div>
 
       {selectedRoom && (
-        <div className="mb-8">
-          <h2 className="mb-4 text-2xl font-bold text-gray-800">Sensor Values for Room {selectedRoom}</h2>
-          <LineChart width={600} height={300} data={sensorData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-            <XAxis dataKey="timestamp" />
-            <YAxis />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
-          </LineChart>
+        <div className="flex flex-col items-center">
+          <div className="w-full max-w-4xl mb-8">
+            <h2 className="mb-4 text-2xl font-bold text-center text-gray-800">Temperature Sensor Values for Room {selectedRoom}</h2>
+            <div className="flex justify-center">
+              <LineChart width={Math.min(600, window.innerWidth - 40)} height={300} data={sensorDataTemperature} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <XAxis dataKey="timestamp" />
+                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+              </LineChart>
+            </div>
+          </div>
+          <div className="w-full max-w-4xl mb-8">
+            <h2 className="mb-4 text-2xl font-bold text-center text-gray-800">Humidity Sensor Values for Room {selectedRoom}</h2>
+            <div className="flex justify-center">
+              <LineChart width={Math.min(600, window.innerWidth - 40)} height={300} data={sensorDataHumidity} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <XAxis dataKey="timestamp" />
+                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+              </LineChart>
+            </div>
+          </div>
+          <div className="w-full max-w-4xl mb-8">
+            <h2 className="mb-4 text-2xl font-bold text-center text-gray-800">Co2 Sensor Values for Room {selectedRoom}</h2>
+            <div className="flex justify-center">
+              <LineChart width={Math.min(600, window.innerWidth - 40)} height={300} data={sensorDataCo2} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <XAxis dataKey="timestamp" />
+                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+              </LineChart>
+            </div>
+          </div>
         </div>
       )}
 

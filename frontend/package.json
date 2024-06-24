@@ -22,6 +22,7 @@
   },
   "scripts": {
     "develop": "WATCHPACK_POLLING=true react-scripts start",
+    "develop-windows": "react-scripts start",
     "start": "WATCHPACK_POLLING=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

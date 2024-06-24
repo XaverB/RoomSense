@@ -29,7 +29,7 @@ namespace RoomSense_Backend.Service
                 }
 
                 // Wait for a certain interval before the next execution
-                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
         }
 
@@ -69,11 +69,11 @@ namespace RoomSense_Backend.Service
                         var previousCo2 = co2Readings.Last().Value;
                         var co2Trend = latestCo2 - previousCo2;
 
-                        var temperatureThreshold = 2.0;
-                        var co2Threshold = 100.0;
+                        var temperatureThreshold = 1.0;
+                        var co2Threshold = 50.0;
 
-                        var isTemperatureHigh = latestTemperature > 25.0; // Example threshold for high temperature
-                        var isCo2High = latestCo2 > 800.0; // Example threshold for high CO2 level
+                        var isTemperatureHigh = latestTemperature > 24.0; // Example threshold for high temperature
+                        var isCo2High = latestCo2 > 500.0; // Example threshold for high CO2 level
 
                         if ((isTemperatureHigh && temperatureTrend > temperatureThreshold) ||
                             (isCo2High && co2Trend > co2Threshold))

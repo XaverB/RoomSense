@@ -59,6 +59,7 @@ namespace RoomSense_Backend.Controllers
                     Message = r.Message,
                     Timestamp = r.Timestamp
                 })
+                .DistinctBy(r => r.RoomId)
                 .ToListAsync();
 
             if (recommendations == null || recommendations.Count == 0)

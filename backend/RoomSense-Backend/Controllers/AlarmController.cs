@@ -32,6 +32,7 @@ namespace RoomSense_Backend.Controllers
                     Message = a.Message,
                     Timestamp = a.Timestamp
                 })
+                .DistinctBy(a => a.RoomId)
                 .ToListAsync();
 
             if (alarms == null || alarms.Count == 0)

@@ -1,4 +1,7 @@
 # RoomSense
+
+![title](./assets/title.webp)
+
 Monitoring of Room Temperature and Air Quality
 
 To efficiently monitor room conditions, rooms are equipped with sensors for temperature and carbon dioxide (CO2). These sensors continuously capture data, which is collected by an Arduino and transmitted to a central server using the MQTT protocol. The captured data is accessible through a user-friendly web application. This platform not only enables _(near)_ real-time monitoring, but also provides automated recommendations for optimal ventilation times, based on the current air quality and temperature. In addition to the web application, users can directly receive recommendations for the next ventilation time via a specially developed Alexa skill, accessed by voice command. This increases the comfort and accessibility of the data for all users.
@@ -324,14 +327,17 @@ Make sure to set the appropriate values for the environment variables in the Doc
 
 Note: Ensure that the required ports are available and not being used by other applications on your system. If necessary, modify the port mappings in the Docker Compose file to use different available ports.
 
-
-
 ## Alexa Skill - room sense
 
-- Install `ASK CLI` by running `npm install -g ask-cli` as administrator.
-- Create account at https://developer.amazon.com/alexa/console
-- Create Skill
-  - define interaction model
-  - create tasks
-  - 
+Currently there is the intent `RecommendationIntent` implemented in the Alexa skill `room sense`. It delivers alls recommendations or recommendations for a single room.
+
+Due to certificate issues, we use a AWS lambda function as a proxy to our api.
+
+## Deployment
+
+The infrastructure is deployed to a AWS EC2 instance. The services and sites are pushed as images to docker hub. On the virtual machine the stack is run with docker compose. 
+
+There are multiple scripts for deployment in the `deploy` directory.
+
+Published to https://iot.xaverb.dev
 
