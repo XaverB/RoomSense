@@ -1,0 +1,3 @@
+- Source available at https://github.com/XaverB/RoomSense
+- Documentation and presentation provided as the readme.md file in the source directory
+- Live demo at https://iot.xaverb.dev
