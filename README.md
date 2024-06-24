@@ -367,11 +367,19 @@ Make sure to set the appropriate values for the environment variables in the Doc
 
 Note: Ensure that the required ports are available and not being used by other applications on your system. If necessary, modify the port mappings in the Docker Compose file to use different available ports.
 
+## Frontend
+
+Simple react site rendering alarms, recommendations and charts.
+
+![image-20240624170250469](./assets/image-20240624170250469.png)
+
 ## Alexa Skill - room sense
 
 Currently there is the intent `RecommendationIntent` implemented in the Alexa skill `room sense`. It delivers alls recommendations or recommendations for a single room.
 
 Due to certificate issues, we use a AWS lambda function as a proxy to our api.
+
+![image-20240624170345175](./assets/image-20240624170345175.png)
 
 ## Deployment
 
@@ -380,4 +388,18 @@ The infrastructure is deployed to a AWS EC2 instance. The services and sites are
 There are multiple scripts for deployment in the `deploy` directory.
 
 Published to https://iot.xaverb.dev
+
+## Conclusion
+
+This project proved to be an engaging and educational experience. While the backend and frontend implementations were straightforward, we encountered several challenges that provided valuable learning opportunities.
+
+**Hardware Challenges:** Due to supply issues with our intended Arduino hardware, we initially struggled with a custom WiFi module. After investing considerable time in troubleshooting, we opted for an alternative WiFi module that performed flawlessly, resolving our connectivity issues.
+
+**Infrastructure:** We chose to host our entire infrastructure on a free AWS EC2 instance, incorporating our custom domain with SSL certification. This decision allowed us to create a robust and secure environment for our IoT showcase.
+
+**Alexa Integration:** Integrating the Alexa skill presented unexpected difficulties, particularly in establishing communication with our API despite the SSL certificate being recognized by web browsers. To overcome this, we implemented proxy Lambda functions as a gateway, successfully bridging the communication gap.
+
+**Future Improvements:** While our current implementation serves as a solid IoT showcase, there's potential to significantly enhance the logic for alarms and recommendations. We've also incorporated mock weather services to improve venting recommendations (e.g., only suggesting ventilation when outdoor temperatures are cooler). Due to time constraints, we didn't implement actual weather service API calls, instead using simulated data.
+
+This project has not only met its primary objectives but also provided us with hands-on experience in overcoming real-world IoT implementation challenges. The skills and knowledge gained throughout this process will undoubtedly prove valuable in future.
 
