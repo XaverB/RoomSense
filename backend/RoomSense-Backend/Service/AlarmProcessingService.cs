@@ -67,7 +67,7 @@ namespace RoomSense_Backend.Service
                         var alarm = new Alarm
                         {
                             RoomId = room.Id,
-                            Message = $"High temperature detected in {room.Name}. Current value: {reading.Value}°C",
+                            Message = $"Hohe Temperatur in {room.Name}. Aktueller Wert: {reading.Value}°C",
                             Timestamp = reading.Timestamp
                         };
                         await dbContext.Alarms.AddAsync(alarm);
@@ -84,7 +84,7 @@ namespace RoomSense_Backend.Service
                         var alarm = new Alarm
                         {
                             RoomId = room.Id,
-                            Message = $"High CO2 level detected in {room.Name}. Current value: {reading.Value} ppm",
+                            Message = $"Hohes CO2 Level erkannt in{room.Name}. Aktueller Wert: {reading.Value} ppm",
                             Timestamp = reading.Timestamp
                         };
                         await dbContext.Alarms.AddAsync(alarm);

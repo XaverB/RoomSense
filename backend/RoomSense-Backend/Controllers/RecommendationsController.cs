@@ -17,7 +17,7 @@ namespace RoomSense_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecommendationDto>>> GetAllRecommendations(int page = 1, int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<RecommendationDto>>> GetAllRecommendations(int page = 1, int pageSize = 1)
         {
             var recommendations = await _context.Recommendations
                 .Include(r => r.Room)
@@ -43,7 +43,7 @@ namespace RoomSense_Backend.Controllers
         }
 
         [HttpGet("room/{roomId}")]
-        public async Task<ActionResult<IEnumerable<RecommendationDto>>> GetRecommendationsByRoom(int roomId, int page = 1, int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<RecommendationDto>>> GetRecommendationsByRoom(int roomId, int page = 1, int pageSize = 1)
         {
             var recommendations = await _context.Recommendations
                 .Include(r => r.Room)
@@ -59,7 +59,6 @@ namespace RoomSense_Backend.Controllers
                     Message = r.Message,
                     Timestamp = r.Timestamp
                 })
-                .DistinctBy(r => r.RoomId)
                 .ToListAsync();
 
             if (recommendations == null || recommendations.Count == 0)

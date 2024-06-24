@@ -78,22 +78,22 @@ namespace RoomSense_Backend.Service
                         if ((isTemperatureHigh && temperatureTrend > temperatureThreshold) ||
                             (isCo2High && co2Trend > co2Threshold))
                         {
-                            var recommendationMessage = "Consider venting the room.";
+                            var recommendationMessage = "Erwägen Sie den Raum zu lüften.";
 
                             if (isTemperatureHigh && temperatureTrend > temperatureThreshold)
                             {
-                                recommendationMessage += " Temperature is rising.";
+                                recommendationMessage += " Die Temperatur steigt.";
                             }
 
                             if (isCo2High && co2Trend > co2Threshold)
                             {
-                                recommendationMessage += " CO2 level is rising.";
+                                recommendationMessage += " CO2 Level steigt.";
                             }
 
                             var recommendation = new Recommendation
                             {
                                 RoomId = room.Id,
-                                Message = $"{recommendationMessage} Current temperature: {latestTemperature}°C, CO2 level: {latestCo2} ppm.",
+                                Message = $"{recommendationMessage} Aktuelle Temperatur: {latestTemperature}°C, CO2 Level: {latestCo2} ppm.",
                                 Timestamp = DateTime.UtcNow
                             };
 

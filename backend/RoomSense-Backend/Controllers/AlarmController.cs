@@ -17,7 +17,7 @@ namespace RoomSense_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AlarmDto>>> GetAlarms(int page = 1, int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<AlarmDto>>> GetAlarms(int page = 1, int pageSize = 1)
         {
             var alarms = await _context.Alarms
                 .Include(a => a.Room)
@@ -32,7 +32,6 @@ namespace RoomSense_Backend.Controllers
                     Message = a.Message,
                     Timestamp = a.Timestamp
                 })
-                .DistinctBy(a => a.RoomId)
                 .ToListAsync();
 
             if (alarms == null || alarms.Count == 0)
