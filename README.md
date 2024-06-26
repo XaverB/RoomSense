@@ -259,6 +259,35 @@ This recommendation processing logic takes into account additional factors such 
 
 Please note that the `GetRoomOccupancyStatus`, `GetOutsideTemperature`, and `GetOutsideCo2Level` methods are placeholders in this example, and you would need to implement the actual logic to retrieve the relevant data based on your specific requirements and available data sources.
 
+```mermaid
+graph TD
+    A[Start] --> B{Is temperature high?}
+    B -->|Yes| C{Is temperature trend exceeding threshold?}
+    C -->|Yes| D{Is room occupied?}
+    D -->|Yes| E{Is outside temperature lower than room temperature?}
+    E -->|Yes| F[Recommend opening windows to allow cooler outside air]
+    E -->|No| G[Recommend turning on air conditioning to cool down the room]
+    D -->|No| H{Is CO2 level high?}
+    C -->|No| H
+    B -->|No| H
+    H -->|Yes| I{Is CO2 trend exceeding threshold?}
+    I -->|Yes| J{Is room occupied?}
+    J -->|Yes| K{Is outside CO2 level lower than room CO2 level?}
+    K -->|Yes| L[Recommend opening windows to allow fresh air]
+    K -->|No| M[Recommend turning on ventilation system to circulate air and reduce CO2]
+    J -->|No| N[Generate recommendation message]
+    I -->|No| N
+    H -->|No| N
+    F --> N
+    G --> N
+    L --> N
+    M --> N
+    N --> O[Add recommendation message, current temperature, and CO2 level to recommendation object]
+    O --> P[End]
+```
+
+
+
 ### Alarm logic
 
 Processes alarms based on the latest sensor readings.
@@ -289,6 +318,36 @@ The `ProcessAlarmsAsync` method performs the following steps:
 5. After processing all the latest readings, saves the changes to the database using `SaveChangesAsync()`.
 
 This method ensures that alarms are generated only if the reading values exceed the specified thresholds and avoids creating duplicate alarms for the same room and timestamp.
+
+```mermaid
+graph TD
+    A[Start] --> B[Retrieve latest readings for each sensor from the database]
+    B --> C[Iterate over each latest reading]
+    C --> D[Retrieve corresponding sensor from the database]
+    D --> E[Retrieve corresponding room from the database]
+    E --> F{Is sensor type temperature?}
+    F -->|Yes| G{Does reading value exceed TemperatureThreshold?}
+    G -->|Yes| H{Does an alarm already exist for the same room and timestamp?}
+    H -->|No| I[Create a new Alarm object with room ID, high temperature message, and reading timestamp]
+    I --> J[Add the new alarm to the Alarms DbSet]
+    H -->|Yes| K{Is sensor type co2?}
+    G -->|No| K
+    F -->|No| K
+    K -->|Yes| L{Does reading value exceed Co2Threshold?}
+    L -->|Yes| M{Does an alarm already exist for the same room and timestamp?}
+    M -->|No| N[Create a new Alarm object with room ID, high CO2 level message, and reading timestamp]
+    N --> O[Add the new alarm to the Alarms DbSet]
+    M -->|Yes| P{Are there more latest readings?}
+    L -->|No| P
+    K -->|No| P
+    J --> P
+    O --> P
+    P -->|Yes| C
+    P -->|No| Q[Save changes to the database]
+    Q --> R[End]
+```
+
+
 
 ## Sensor Simulator
 
